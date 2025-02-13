@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Видео на фоне с иконками</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet"> <!-- Подключаем шрифт Comfortaa -->
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .blurred-box {
+            position: absolute;
+            top: 40%; /* Подниму блок немного выше */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30%; /* Уменьшил ширину блока */
+            height: 35%; /* Увеличил высоту для пространства */
+            background-color: rgba(0, 0, 0, 0.1); /* Полупрозрачный фон */
+            backdrop-filter: blur(5px); /* Легкий блюр */
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column; /* Располагаем элементы по вертикали */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 150px; /* Размер аватарки увеличен на 150% */
+            height: 150px;
+            background-image: url('file:///D:/Lev/bio.lol/pfp.jpg'); /* Путь к изображению аватарки */
+            background-size: cover; /* Подгоняет изображение по размеру */
+            background-position: center;
+            border-radius: 50%; /* Делает круглый аватар */
+            margin-bottom: 10px; /* Отступ между аватаркой и текстом */
+        }
+
+        .text {
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            font-family: 'Comfortaa', sans-serif; /* Применяем шрифт Comfortaa */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.6); /* Эффект свечения */
+            letter-spacing: 2px; /* Немного растягиваем буквы для улучшения читаемости */
+            margin-bottom: 20px; /* Отступ между текстом и нижней частью блока */
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 25px; /* Отступы между иконками */
+            margin-top: 20px; /* Отступ сверху для иконок */
+        }
+
+        .social-icons img {
+            width: 30px; /* Размер иконок */
+            height: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .social-icons img:hover {
+            transform: scale(1.1); /* Легкое увеличение иконок при наведении */
+        }
+    </style>
+</head>
+<body>
+    <!-- Видео на фоне с включенным звуком -->
+    <video autoplay loop>
+        <source src="file:///D:\Lev\bio.lol\bg.mp4" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+    </video>
+
+    <div class="blurred-box">
+        <div class="avatar"></div> <!-- Кружок для аватарки -->
+        <div class="text">sorayuki</div> <!-- Текст внутри бокса -->
+        
+        <!-- Социальные иконки -->
+        <div class="social-icons">
+            <a href="https://t.me/zablud1lsya" target="_blank">
+                <img src="file:///D:/Lev/bio.lol/tgico.png" alt="Telegram">
+            </a>
+            <a href="https://steamcommunity.com/id/sorayuk1/" target="_blank">
+                <img src="file:///D:/Lev/bio.lol/steamico.png" alt="Steam">
+            </a>
+            <a href="https://yoomoney.ru/to/4100118915711560" target="_blank">
+                <img src="file:///D:/Lev/bio.lol/donico.png" alt="Donate">
+            </a>
+            <a href="https://steamcommunity.com/tradeoffer/new/?partner=938081214&token=aK2o2rrh" target="_blank">
+                <img src="file:///D:/Lev/bio.lol/tradeico.png" alt="Trade">
+            </a>
+        </div>
+    </div>
+</body>
+</html>
