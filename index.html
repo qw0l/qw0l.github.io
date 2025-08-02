@@ -3,102 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorayuki</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+    <title>@zabludilsya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body, html {
-            height: 100%;
+        * {
             margin: 0;
-            overflow: hidden;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
 
-        video {
-            position: absolute;
+        #video-bg {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: -1;
+            z-index: -3;
+            opacity: 0.9;
         }
 
-        .blurred-box {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 30%;
-            height: 35%;
-            background-color: rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(5px);
-            border-radius: 15px;
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -2;
+        }
+
+        .container {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            perspective: 1000px;
+        }
+
+        .bio-card {
+            background: rgba(31, 31, 31, 0.096);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.1s linear;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
         }
 
         .avatar {
-            width: 150px;
-            height: 150px;
-            background-image: url('pfp.jpg');
-            background-size: cover;
-            background-position: center;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            margin-bottom: 10px;
+            border: 0px solid rgba(255, 255, 255, 0.15);
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .text {
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-            font-family: 'Comfortaa', sans-serif;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.6);
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+        .username {
+            color: #ffffffbd;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
-        .social-icons {
+        .bio-content {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .social-links {
             display: flex;
-            gap: 25px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
         }
 
-        .social-icons img {
-            width: 30px;
-            height: 30px;
+        .social-icon {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.08);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            outline: none; /* Убираем пунктирное выделение */
+            border: none; /* Убираем границы */
         }
 
-        .social-icons img:hover {
+        .social-icon:hover {
+            transform: scale(1.15);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .bio-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.03),
+                rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            z-index: -1;
+        }
+
+        @media (max-width: 600px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .username {
+                font-size: 1.5rem;
+            }
+            .bio-card {
+                padding: 20px;
+            }
+        }
+
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .drop {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
+            animation: rain linear forwards;
+            top: -20px;
+        }
+
+        @keyframes rain {
+            to {
+                transform: translateY(calc(100vh + 20px));
+            }
+        }
+
+        /* Вертикальный регулятор громкости */
+        .volume-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .volume-slider-container {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            transform: rotate(-90deg);
+            transform-origin: left;
+            position: absolute;
+            left: 50px;
+            margin-top: -48px;
+        }
+
+        .volume-control:hover .volume-slider {
+            opacity: 1;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+
+        .volume-icon {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .volume-icon:hover {
+            color: white;
             transform: scale(1.1);
         }
     </style>
 </head>
 <body>
-    <video autoplay loop>
-        <source src="bg.mp4" type="video/mp4">
-        Ваш браузер не поддерживает видео.
+    <video id="video-bg" autoplay muted loop>
+        <source src="video.mp4" type="video/mp4">
     </video>
+    <div class="overlay"></div>
 
-    <div class="blurred-box">
-        <div class="avatar"></div>
-        <div class="text">sorayuki</div>
-        <div class="social-icons">
-            <a href="https://t.me/zablud1lsya" target="_blank">
-                <img src="tgico.png" alt="Telegram">
-            </a>
-            <a href="https://steamcommunity.com/id/sorayuk1/" target="_blank">
-                <img src="steamico.png" alt="Steam">
-            </a>
-            <a href="https://yoomoney.ru/to/4100118915711560" target="_blank">
-                <img src="donico.png" alt="Donate">
-            </a>
-            <a href="https://steamcommunity.com/tradeoffer/new/?partner=938081214&token=aK2o2rrh" target="_blank">
-                <img src="tradeico.png" alt="Trade">
-            </a>
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="rain" id="rain"></div>
+
+    <div class="container">
+        <div class="bio-card" id="bio-card">
+            <div class="profile-header">
+                <img src="pfp.jpg" alt="Аватарка" class="avatar">
+                <h1 class="username">@zabludilsya</h1>
+            </div>
+            
+            <div class="bio-content">
+                <p>
+                    sharing earphones is more romantic
+                </p>
+            </div>
+
+            <div class="social-links">
+                <a href="https://t.me/zablud1lsya" target="_blank" class="social-icon"><i class="fab fa-telegram"></i></a>
+                <a href="https://discordapp.com/users/741299586278097006" target="_blank" class="social-icon"><i class="fab fa-discord"></i></a>
+                <a href="https://www.roblox.com/users/2305772162/profile" target="_blank" class="social-icon"><i class="fas fa-gamepad"></i></a>
+                <a href="https://steamcommunity.com/id/sorayuk1/" target="_blank" class="social-icon"><i class="fab fa-steam"></i></a>
+                <a href="#" class="social-icon crypto-addy" title="TON USDT: UQBYMGMh85QfPMgJraoLVEa8wrLvqtL2XgyYN9XGn_29RtoV"><i class="fab fa-ethereum"></i></a>
+            </div>
         </div>
     </div>
+
+    <div class="volume-control">
+        <div class="volume-slider-container">
+            <input type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider" id="volume-slider">
+        </div>
+        <i class="fas fa-volume-up volume-icon" id="volume-icon"></i>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const card = document.getElementById('bio-card');
+            const container = document.querySelector('.container');
+            
+            // Эффект наклона карточки
+            let isHovering = false;
+            let targetX = 0, targetY = 0;
+            let currentX = 0, currentY = 0;
+            const factor = 0.1;
+            
+            container.addEventListener('mousemove', (e) => {
+                if (!isHovering) isHovering = true;
+                
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                targetX = (y - centerY) / 20;
+                targetY = (centerX - x) / 20;
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                isHovering = false;
+                targetX = 0;
+                targetY = 0;
+            });
+            
+            function animate() {
+                if (isHovering || Math.abs(currentX) > 0.1 || Math.abs(currentY) > 0.1) {
+                    currentX += (targetX - currentX) * factor;
+                    currentY += (targetY - currentY) * factor;
+                    
+                    card.style.transform = `rotateX(${currentX}deg) rotateY(${currentY}deg)`;
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+            
+            // Эффект дождя
+            const rainContainer = document.getElementById('rain');
+            const dropsCount = 150;
+            
+            function createDrop() {
+                const drop = document.createElement('div');
+                drop.classList.add('drop');
+                
+                const left = Math.random() * 100;
+                const height = Math.random() * 15 + 5;
+                const duration = Math.random() * 0.5 + 0.5;
+                const opacity = Math.random() * 0.4 + 0.1;
+                const delay = Math.random() * 2;
+                
+                drop.style.left = `${left}%`;
+                drop.style.height = `${height}px`;
+                drop.style.animationDuration = `${duration}s`;
+                drop.style.opacity = opacity;
+                drop.style.animationDelay = `${delay}s`;
+                
+                rainContainer.appendChild(drop);
+                
+                setTimeout(() => {
+                    drop.remove();
+                }, (duration + delay) * 1000);
+            }
+            
+            for (let i = 0; i < dropsCount; i++) {
+                setTimeout(createDrop, Math.random() * 2000);
+            }
+            
+            setInterval(() => {
+                if (rainContainer.children.length < dropsCount) {
+                    createDrop();
+                }
+            }, 100);
+
+            // Управление музыкой
+            const bgMusic = document.getElementById('bg-music');
+            const volumeIcon = document.getElementById('volume-icon');
+            const volumeSlider = document.getElementById('volume-slider');
+            
+            function startMusic() {
+                bgMusic.volume = volumeSlider.value;
+                const playPromise = bgMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        volumeIcon.classList.replace('fa-volume-up', 'fa-volume-mute');
+                        bgMusic.muted = true;
+                    });
+                }
+            }
+            
+            document.addEventListener('click', () => {
+                startMusic();
+            }, { once: true });
+            
+            volumeSlider.addEventListener('input', () => {
+                bgMusic.volume = volumeSlider.value;
+                bgMusic.muted = false;
+                
+                if (volumeSlider.value == 0) {
+                    volumeIcon.classList.replace('fa-volume-up', 'fa-volume-mute');
+                } else {
+                    volumeIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
+                }
+            });
+            
+            volumeIcon.addEventListener('click', () => {
+                if (bgMusic.muted || bgMusic.volume === 0) {
+                    bgMusic.muted = false;
+                    bgMusic.volume = volumeSlider.value || 0.5;
+                    volumeSlider.value = bgMusic.volume;
+                    volumeIcon.classList.replace('fa-volume-mute', 'fa-volume-up');
+                } else {
+                    bgMusic.muted = true;
+                    volumeIcon.classList.replace('fa-volume-up', 'fa-volume-mute');
+                }
+            });
+            
+            volumeIcon.addEventListener('mouseenter', () => {
+                volumeSlider.style.opacity = '1';
+            });
+            
+            let hideSliderTimeout;
+            volumeSlider.addEventListener('mouseleave', () => {
+                clearTimeout(hideSliderTimeout);
+                hideSliderTimeout = setTimeout(() => {
+                    volumeSlider.style.opacity = '0';
+                }, 500);
+            });
+            
+            volumeSlider.addEventListener('mouseenter', () => {
+                clearTimeout(hideSliderTimeout);
+            });
+
+            // Копирование криптоадреса
+            document.querySelector('.crypto-addy').addEventListener('click', (e) => {
+                e.preventDefault();
+                const address = 'UQBYMGMh85QfPMgJraoLVEa8wrLvqtL2XgyYN9XGn_29RtoV';
+                navigator.clipboard.writeText(address).then(() => {
+                    const icon = e.currentTarget.querySelector('i');
+                    const originalClass = icon.className;
+                    icon.className = 'fas fa-check';
+                    setTimeout(() => {
+                        icon.className = originalClass;
+                    }, 2000);
+                });
+            });
+
+            // Анимация title страницы
+            const nick = "@zabludilsya";
+            let i = 0;
+            
+            function animateTitle() {
+                document.title = nick.substring(0, i);
+                i++;
+                if (i > nick.length) {
+                    i = 0;
+                    setTimeout(animateTitle, 1000);
+                } else {
+                    setTimeout(animateTitle, 100);
+                }
+            }
+            
+            animateTitle();
+        });
+    </script>
 </body>
 </html>
